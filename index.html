@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echo</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-icon">📍</div>
+      <div>
+        <h1>Echo</h1>
+        <span>free, private, yours</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" id="locateBtn" title="Go to my location">⌖ Locate me</button>
+      <button class="btn-ghost" id="exportBtn" title="Download your stories">↓ Export</button>
+      <button class="btn-ghost" id="importBtn" title="Restore stories from a file">↑ Import</button>
+      <button class="btn-primary" id="addEchoBtn">+ Drop an Echo</button>
+      <button class="btn-ghost" id="toggleSidebar" style="display:none;">☰</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div id="map">
+      <div class="board-intro">
+        <span class="eyebrow">Open map edition</span>
+        <h2>Your world, in stories.</h2>
+        <p>Click anywhere to leave a memory. Your stories stay on this device.</p>
+      </div>
+      <div class="board-status" aria-label="Board status">
+        <span class="status-dot"></span>
+        <span>Free map</span>
+        <span class="status-divider"></span>
+        <span>Stories stay private</span>
+      </div>
+      <div class="coordinate-label coordinate-north">90° N</div>
+      <div class="coordinate-label coordinate-south">90° S</div>
+      <div class="map-loading" id="mapLoading">Preparing your private story board…</div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div>
+          <span class="sidebar-kicker">Archive</span>
+          <h2>Your echoes</h2>
+        </div>
+        <span class="echo-count" id="echoCount">0</span>
+      </div>
+      <div class="sidebar-note">Small moments, pinned to the places that hold them.</div>
+      <div class="archive-tools">
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="storySearch" type="search" placeholder="Search echoes" aria-label="Search echoes">
+        </label>
+        <select id="storyFilter" aria-label="Filter echoes">
+          <option value="all">All stories</option>
+          <option value="recent">Recently added</option>
+          <option value="favorites">Favorites</option>
+        </select>
+        <button class="random-btn" id="randomEchoBtn" type="button">✦ Surprise me</button>
+      </div>
+      <div class="echo-list" id="echoList">
+        <div class="empty-state">
+          <div style="font-size:2rem;">🗺️</div>
+          <p>No echoes yet.<br>Be the first to leave a memory here.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Add Echo Modal -->
+  <div class="overlay" id="addModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Drop an Echo</h3>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="location-hint" id="locationHint">
+          📌 Click on the map to choose a location first
+        </div>
+        <button class="location-btn" id="useLocationBtn" type="button">⌖ Use my current location</button>
+        <form id="echoForm">
+          <div class="form-group">
+            <label for="echoTitle">Title</label>
+            <input type="text" id="echoTitle" placeholder="A quiet corner, a first hello…" required maxlength="80">
+          </div>
+          <div class="form-group">
+            <label for="echoStory">Your story</label>
+            <textarea id="echoStory" placeholder="What happened here? What does this place mean to you?" required maxlength="600"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="echoAuthor">Your name (or leave anonymous)</label>
+            <input type="text" id="echoAuthor" placeholder="Anonymous" maxlength="40">
+          </div>
+          <div class="form-group">
+            <label for="echoPhoto">Add a photo <span>(optional)</span></label>
+            <input type="file" id="echoPhoto" accept="image/*">
+            <div class="photo-preview" id="photoPreview"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="cancelModal">Cancel</button>
+        <button class="btn-primary" id="submitEcho">Leave Echo</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="overlay" id="echoDetail">
+    <article class="modal detail-modal">
+      <div class="modal-header">
+        <h3 id="detailTitle"></h3>
+        <button class="close-btn" id="closeDetail">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="popup-meta" id="detailMeta"></div>
+        <img class="detail-photo" id="detailPhoto" alt="" hidden>
+        <p class="popup-body" id="detailBody"></p>
+      </div>
+      <div class="detail-actions">
+        <button class="btn-ghost" id="favoriteDetail" type="button">☆ Favorite</button>
+        <button class="btn-ghost" id="editDetail" type="button">Edit</button>
+        <button class="btn-danger" id="deleteDetail" type="button">Delete</button>
+      </div>
+    </article>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json" hidden>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
